@@ -1,4 +1,4 @@
-// CLASE BASE ACTUALIZADA (Paso 1)
+// CLASE BASE ACTUALIZADA
 class Personaje {
   constructor(nombre, vida, danio, defensa, velocidad, clase) {
     this.nombre = nombre;
@@ -20,7 +20,7 @@ class Personaje {
 }
 
 // ---------------------------------------------------------
-// PASO 2: CLASES HIJAS
+// PASO 2: CLASES
 // ---------------------------------------------------------
 
 // 1. GUERRERO
@@ -124,3 +124,82 @@ let sombra = new Picaro("Sombra", 85, 28, 8, 20);
 console.log(merlin.atacar_con_hechizo()); 
 console.log(sombra.atacar_con_daga()); 
 sancho.curar();
+// ---------------------------------------------------------
+// PASO 3: EL MOTOR DEL JUEGO (RONDAS Y TURNOS)
+// ---------------------------------------------------------
+
+// 1. Creamos a los 7 personajes obligatorios (2 Guerreros, 2 Magos, 1 Arquero, 1 Clérigo, 1 Pícaro)
+let g1 = new Guerrero("Garen", 150, 20, 15, 8);
+let g2 = new Guerrero("Caballero", 140, 22, 18, 6);
+let m1 = new Mago("Ann", 90, 25, 8, 14);
+let m2 = new Mago("Ahri", 85, 28, 8, 12);
+let a1 = new Arquero("Ashe", 100, 22, 12, 15);
+let c1 = new Clerigo("Morgana", 110, 15, 12, 18);
+let p1 = new Picaro("Joker", 95, 24, 10, 20);
+
+// Los metemos todos en un "arreglo" (lista) que representará a los peleadores vivos
+let jugadores = [g1, g2, m1, m2, a1, c1, p1];
+
+console.log("=== INICIO DEL JUEGO ===");
+// Hacemos que todos saluden usando un ciclo forEach
+jugadores.forEach(jugador => jugador.saludar());
+
+// 2. Iniciamos el control de las rondas
+let ronda = 1;
+
+// El juego sigue MIENTRAS haya más de 1 jugador vivo
+while (jugadores.length > 1) {
+  console.log(`\n=== RONDA ${ronda} ===`);
+
+  // 3. Calcular el orden de ataque basado en la velocidad
+  let ordenTurno = [];
+
+  for (let i = 0; i < jugadores.length; i++) {
+    let jugador = jugadores[i];
+    // Generamos un número del 1 a la velocidad del personaje
+    let tiradaVelocidad = Math.floor(Math.random() * jugador.velocidad) + 1;
+    
+    // Guardamos al personaje y su número en una lista temporal
+    ordenTurno.push({
+      personaje: jugador,
+      numeroTirada: tiradaVelocidad
+    });
+  }
+
+  // Ordenamos la lista de mayor a menor según el número que sacaron
+  ordenTurno.sort((a, b) => b.numeroTirada - a.numeroTirada);
+
+  // 4. Ciclo de Ataques (Cada personaje hace su acción)
+  for (let i = 0; i < ordenTurno.length; i++) {
+    let atacante = ordenTurno[i].personaje;
+
+    // Solo ataca si sigue vivo (pudo haber muerto en el turno de alguien más en esta misma ronda)
+    if (atacante.vida > 0) {
+      
+      // Filtramos para obtener a los enemigos (que no sea él mismo y que estén vivos)
+      let posiblesObjetivos = jugadores.filter(p => p !== atacante && p.vida > 0);
+      
+      // Si todavía hay a quién pegarle...
+      if (posiblesObjetivos.length > 0) {
+        // Escogemos un objetivo al azar
+        let objetivoAleatorio = posiblesObjetivos[Math.floor(Math.random() * posiblesObjetivos.length)];
+        
+        console.log(`-> ${atacante.nombre} (Sacó ${ordenTurno[i].numeroTirada} en vel) se prepara para atacar a ${objetivoAleatorio.nombre}.`);
+        
+        // AQUÍ IRÁ LA LÓGICA DE DAÑO Y DEFENSA DEL PASO 4
+      }
+    }
+  }
+
+  // Limpiamos la arena: filtramos el arreglo para que solo queden los vivos para la siguiente ronda
+  jugadores = jugadores.filter(p => p.vida > 0);
+  ronda++; // Sumamos 1 al contador de la ronda
+  
+  // Condición de seguridad para evitar un ciclo infinito mientras probamos (se puede borrar después)
+  if (ronda > 5) break; 
+}
+
+// Mensaje final
+if (jugadores.length === 1) {
+    console.log(`\n¡EL GANADOR ES ${jugadores[0].nombre}!`);
+}
