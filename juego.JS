@@ -1,13 +1,13 @@
 // ==========================================================
-// PROYECTO: VIDEOJUEGO DE BATALLA POR CONSOLA (POO)
-// ALUMNO: Yoinser
+// PROYECTO: CLASH OF LEGENDS
+// ALUMNO: Yoinser León
 // ==========================================================
 
 // ---------------------------------------------------------
 // 1. CLASE BASE: PERSONAJE
 // ---------------------------------------------------------
 class Personaje {
-  constructor(nombre, vida, danio, defensa, velocidad, clase) {
+  constructor(nombre, vida, danio, defensa, velocidad, clase, fraseVictoria = "¡He triunfado!") {
     this.nombre = nombre;
     this.vida = vida;
     this.vidaMaxima = vida; // Para el límite de curación del Clérigo
@@ -15,6 +15,7 @@ class Personaje {
     this.defensa = defensa;
     this.velocidad = velocidad;
     this.clase = clase;
+    this.fraseVictoria = fraseVictoria;
   }
 
   saludar() {
@@ -30,8 +31,8 @@ class Personaje {
 // 2. CLASES HIJAS (Guerrero, Mago, Arquero, Clérigo, Pícaro)
 // ---------------------------------------------------------
 class Guerrero extends Personaje {
-  constructor(nombre, vida, danio, defensa, velocidad) {
-    super(nombre, vida, danio, defensa, velocidad, "Guerrero");
+  constructor(nombre, vida, danio, defensa, velocidad, fraseVictoria) {
+    super(nombre, vida, danio, defensa, velocidad, "Guerrero", fraseVictoria);
     this.array_de_armas = ["Espada Pesada", "Hacha de Batalla", "Mazo de Guerra"];
   }
   atacar_con_arma() {
@@ -41,8 +42,8 @@ class Guerrero extends Personaje {
 }
 
 class Mago extends Personaje {
-  constructor(nombre, vida, danio, defensa, velocidad) {
-    super(nombre, vida, danio, defensa, velocidad, "Mago");
+  constructor(nombre, vida, danio, defensa, velocidad, fraseVictoria) {
+    super(nombre, vida, danio, defensa, velocidad, "Mago", fraseVictoria);
     this.array_de_hechizos = ["Bola de Fuego", "Rayo de Escarcha", "Tormenta Eléctrica"];
   }
   atacar_con_hechizo() {
@@ -52,8 +53,8 @@ class Mago extends Personaje {
 }
 
 class Arquero extends Personaje {
-  constructor(nombre, vida, danio, defensa, velocidad) {
-    super(nombre, vida, danio, defensa, velocidad, "Arquero");
+  constructor(nombre, vida, danio, defensa, velocidad, fraseVictoria) {
+    super(nombre, vida, danio, defensa, velocidad, "Arquero", fraseVictoria);
     this.array_de_flechas = ["Flecha Perforante", "Flecha de Fuego", "Flecha Envenenada"];
   }
   disparar() {
@@ -63,8 +64,8 @@ class Arquero extends Personaje {
 }
 
 class Clerigo extends Personaje {
-  constructor(nombre, vida, danio, defensa, velocidad) {
-    super(nombre, vida, danio, defensa, velocidad, "Clérigo");
+  constructor(nombre, vida, danio, defensa, velocidad, fraseVictoria) {
+    super(nombre, vida, danio, defensa, velocidad, "Clérigo", fraseVictoria);
     this.array_de_plegarias = ["Castigo Divino", "Luz Cegadora", "Fuego Sagrado"];
   }
   atacar_con_plegaria() {
@@ -81,8 +82,8 @@ class Clerigo extends Personaje {
 }
 
 class Picaro extends Personaje {
-  constructor(nombre, vida, danio, defensa, velocidad) {
-    super(nombre, vida, danio, defensa, velocidad, "Pícaro");
+  constructor(nombre, vida, danio, defensa, velocidad, fraseVictoria) {
+    super(nombre, vida, danio, defensa, velocidad, "Pícaro", fraseVictoria);
     this.array_de_dagas = ["Daga Sombría", "Cuchillo Arrojadizo", "Hoja Oculta"];
   }
   atacar_con_daga() {
@@ -93,15 +94,15 @@ class Picaro extends Personaje {
 }
 
 // ---------------------------------------------------------
-// 3. CREACIÓN DE LOS 7 PERSONAJES OBLIGATORIOS
+// 3. CREACIÓN DE LOS 7 PERSONAJES OBLIGATORIOS (Con frases)
 // ---------------------------------------------------------
-let g1 = new Guerrero("Garen", 150, 20, 15, 8);
-let g2 = new Guerrero("Darius", 140, 22, 18, 6);
-let m1 = new Mago("Ann", 90, 25, 8, 14);
-let m2 = new Mago("Ahri", 85, 28, 8, 12);
-let a1 = new Arquero("Ashe", 100, 22, 12, 15);
-let c1 = new Clerigo("Morgana", 110, 15, 12, 18);
-let p1 = new Picaro("Joker", 95, 24, 10, 20);
+let g1 = new Guerrero("Garen", 150, 20, 15, 8, "¡La victoria pertenece a los que Resisten!");
+let g2 = new Guerrero("Darius", 140, 22, 18, 6, "¡Nadie puede detener mi fuerza!");
+let m1 = new Mago("Ann", 90, 25, 8, 14, "¡Les dije que no se metieran con mi magia!");
+let m2 = new Mago("Ahri", 85, 28, 8, 12, "Fue divertido mientras duró, idiota.");
+let a1 = new Arquero("Ashe", 100, 22, 12, 15, "La puntería y la paciencia lo son todo.");
+let c1 = new Clerigo("Morgana", 110, 15, 12, 18, "El destino de la victoria estaba escrito.");
+let p1 = new Picaro("Joker", 95, 24, 10, 20, "¡Un show perfecto! Me llevo todo el botín.");
 
 let jugadores = [g1, g2, m1, m2, a1, c1, p1];
 
@@ -109,7 +110,7 @@ let jugadores = [g1, g2, m1, m2, a1, c1, p1];
 // 4. MOTOR DEL JUEGO (BATALLA)
 // ---------------------------------------------------------
 console.log("==================================================");
-console.log("             INICIO DE LA BATALLA CAMPAL          ");
+console.log("                CLASH OF LEGENDS                  ");
 console.log("==================================================");
 
 // Saludo inicial
@@ -205,8 +206,10 @@ while (jugadores.length > 1) {
 // 5. FIN DEL JUEGO
 // ---------------------------------------------------------
 if (jugadores.length === 1) {
+    let ganador = jugadores[0];
     console.log("\n==================================================");
-    console.log(`🏆 ¡EL JUEGO HA TERMINADO! EL GANADOR ES: ${jugadores[0].nombre.toUpperCase()} 🏆`);
+    console.log(`🏆 ¡EL JUEGO HA TERMINADO! EL GANADOR ES: ${ganador.nombre.toUpperCase()} 🏆`);
+    console.log(`🗣️ ${ganador.nombre}: "${ganador.fraseVictoria}"`);
     console.log("==================================================");
 } else {
     console.log("\nEmpate o todos murieron simultáneamente.");
