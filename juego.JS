@@ -7,23 +7,25 @@
 // 1. CLASE BASE: PERSONAJE
 // ---------------------------------------------------------
 class Personaje {
-  constructor(nombre, vida, danio, defensa, velocidad, clase, fraseVictoria = "¡He triunfado!") {
+  constructor(nombre, vida, danio, defensa, velocidad, clase, fraseSaludo, fraseVictoria) {
     this.nombre = nombre;
     this.vida = vida;
     this.vidaMaxima = vida; // Para el límite de curación del Clérigo
-    this.danio = danio;
+    this.danio = danio; // Este será el daño EXCLUSIVO de las habilidades
     this.defensa = defensa;
     this.velocidad = velocidad;
     this.clase = clase;
+    this.fraseSaludo = fraseSaludo;
     this.fraseVictoria = fraseVictoria;
   }
 
   saludar() {
-    console.log(`[SALUDO] ¡Hola! Mi nombre es ${this.nombre} y soy un ${this.clase}.`);
+    console.log(`[SALUDO] ${this.nombre} (${this.clase}): "${this.fraseSaludo}"`);
   }
 
   atacar() {
-    return { tipo: "puños", nombreArma: "sus puños", danio: this.danio, critico: false };
+    // Los puños tienen el mismo daño fijo (10) para todas las clases
+    return { tipo: "puños", nombreArma: "sus puños", danio: 10, critico: false };
   }
 }
 
@@ -31,8 +33,8 @@ class Personaje {
 // 2. CLASES HIJAS (Guerrero, Mago, Arquero, Clérigo, Pícaro)
 // ---------------------------------------------------------
 class Guerrero extends Personaje {
-  constructor(nombre, vida, danio, defensa, velocidad, fraseVictoria) {
-    super(nombre, vida, danio, defensa, velocidad, "Guerrero", fraseVictoria);
+  constructor(nombre, vida, danio, defensa, velocidad, fraseSaludo, fraseVictoria) {
+    super(nombre, vida, danio, defensa, velocidad, "Guerrero", fraseSaludo, fraseVictoria);
     this.array_de_armas = ["Espada Pesada", "Hacha de Batalla", "Mazo de Guerra"];
   }
   atacar_con_arma() {
@@ -42,8 +44,8 @@ class Guerrero extends Personaje {
 }
 
 class Mago extends Personaje {
-  constructor(nombre, vida, danio, defensa, velocidad, fraseVictoria) {
-    super(nombre, vida, danio, defensa, velocidad, "Mago", fraseVictoria);
+  constructor(nombre, vida, danio, defensa, velocidad, fraseSaludo, fraseVictoria) {
+    super(nombre, vida, danio, defensa, velocidad, "Mago", fraseSaludo, fraseVictoria);
     this.array_de_hechizos = ["Bola de Fuego", "Rayo de Escarcha", "Tormenta Eléctrica"];
   }
   atacar_con_hechizo() {
@@ -53,19 +55,22 @@ class Mago extends Personaje {
 }
 
 class Arquero extends Personaje {
-  constructor(nombre, vida, danio, defensa, velocidad, fraseVictoria) {
-    super(nombre, vida, danio, defensa, velocidad, "Arquero", fraseVictoria);
+  constructor(nombre, vida, danio, defensa, velocidad, fraseSaludo, fraseVictoria) {
+    super(nombre, vida, danio, defensa, velocidad, "Arquero", fraseSaludo, fraseVictoria);
     this.array_de_flechas = ["Flecha Perforante", "Flecha de Fuego", "Flecha Envenenada"];
+    this.flechas = 7; // Cantidad inicial de munición
   }
   disparar() {
+    this.flechas--; // Resta una flecha
     let flecha = this.array_de_flechas[Math.floor(Math.random() * this.array_de_flechas.length)];
+    console.log(`🏹 [MUNICIÓN] A ${this.nombre} le quedan ${this.flechas} flechas.`);
     return { tipo: "flecha", nombreArma: flecha, danio: this.danio, critico: false };
   }
 }
 
 class Clerigo extends Personaje {
-  constructor(nombre, vida, danio, defensa, velocidad, fraseVictoria) {
-    super(nombre, vida, danio, defensa, velocidad, "Clérigo", fraseVictoria);
+  constructor(nombre, vida, danio, defensa, velocidad, fraseSaludo, fraseVictoria) {
+    super(nombre, vida, danio, defensa, velocidad, "Clérigo", fraseSaludo, fraseVictoria);
     this.array_de_plegarias = ["Castigo Divino", "Luz Cegadora", "Fuego Sagrado"];
   }
   atacar_con_plegaria() {
@@ -82,8 +87,8 @@ class Clerigo extends Personaje {
 }
 
 class Picaro extends Personaje {
-  constructor(nombre, vida, danio, defensa, velocidad, fraseVictoria) {
-    super(nombre, vida, danio, defensa, velocidad, "Pícaro", fraseVictoria);
+  constructor(nombre, vida, danio, defensa, velocidad, fraseSaludo, fraseVictoria) {
+    super(nombre, vida, danio, defensa, velocidad, "Pícaro", fraseSaludo, fraseVictoria);
     this.array_de_dagas = ["Daga Sombría", "Cuchillo Arrojadizo", "Hoja Oculta"];
   }
   atacar_con_daga() {
@@ -96,15 +101,15 @@ class Picaro extends Personaje {
 // ---------------------------------------------------------
 // 3. CREACIÓN DE LOS 7 PERSONAJES OBLIGATORIOS (Con frases)
 // ---------------------------------------------------------
-let g1 = new Guerrero("Garen", 150, 20, 15, 8, "¡La victoria pertenece a los que Resisten!");
-let g2 = new Guerrero("Darius", 140, 22, 18, 6, "¡Nadie puede detener mi fuerza!");
-let m1 = new Mago("Ann", 90, 25, 8, 14, "¡Les dije que no se metieran con mi magia!");
-let m2 = new Mago("Ahri", 85, 28, 8, 12, "Fue divertido mientras duró, idiota.");
-let a1 = new Arquero("Ashe", 100, 22, 12, 15, "La puntería y la paciencia lo son todo.");
-let c1 = new Clerigo("Morgana", 110, 15, 12, 18, "El destino de la victoria estaba escrito.");
-let p1 = new Picaro("Joker", 95, 24, 10, 20, "¡Un show perfecto! Me llevo todo el botín.");
+let g1 = new Guerrero("Balthazar \"Puño de Hierro\"", 150, 20, 15, 8, "El destino nos ha reunido en el lodo y la sangre. Demuéstrame si tu nombre merece ser recordado.", "El polvo y el acero hablan por sí solos. Limpia mi espada, esto ha terminado.");
+let g2 = new Guerrero("Thalia \"Corazón de León\"", 140, 22, 18, 6, "No temo a la muerte ni a tu espada. ¡Veamos de qué estás hecho en este instante!", "El campo de batalla ha hablado. Mi espada sigue intacta; tu destino, no.");
+let m1 = new Mago("Ignis \"El Tejehechizos\"", 90, 25, 8, 14, "El conocimiento es el arma más peligrosa... y yo domino la tormenta y el fuego.", "La magia siempre prevalece sobre la fuerza bruta. Un resultado predecible.");
+let m2 = new Mago("Morgana \"La Atrapa Almas\"", 85, 28, 8, 12, "Tu mente es un libro abierto... y estoy a punto de arrancar la última página.", "Las estrellas han dictado su sentencia. Su fuego se ha apagado.");
+let c1 = new Clerigo("Cassian \"El Custodio del Alba\"", 110, 15, 12, 18, "Incluso en la oscuridad más profunda, la luz sagrada busca a los infieles. Arrodíllate.", "La penitencia ha sido pagada. Que el descanso eterno sea clemente con ellos.");
+let a1 = new Arquero("Thorne Ojo de Halcón", 100, 22, 12, 15, "Una sola flecha, un solo latido. No te preocupes, ni siquiera sentirás el impacto.", "La distancia nunca fue un problema. Cada flecha encuentra siempre su destino.");
+let p1 = new Picaro("Nyx \"La Daga Invisible\"", 95, 24, 10, 20, "Dicen que la muerte llega sin avisar... hoy me he tomado la libertad de adelantarme.", "El oro es efímero, pero la sombra que dejo tras de mí es eterna. Adiós.");
 
-let jugadores = [g1, g2, m1, m2, a1, c1, p1];
+let jugadores = [g1, g2, m1, m2, c1, a1, p1];
 
 // ---------------------------------------------------------
 // 4. MOTOR DEL JUEGO (BATALLA)
@@ -114,6 +119,7 @@ console.log("                CLASH OF LEGENDS                  ");
 console.log("==================================================");
 
 // Saludo inicial
+console.log("\n--- PRESENTACIÓN DE LOS CAMPEONES ---");
 jugadores.forEach(jugador => jugador.saludar());
 
 let ronda = 1;
@@ -156,8 +162,16 @@ while (jugadores.length > 1) {
           // Habilidad especial según su clase
           if (atacante.clase === "Guerrero") accion = atacante.atacar_con_arma();
           else if (atacante.clase === "Mago") accion = atacante.atacar_con_hechizo();
-          else if (atacante.clase === "Arquero") accion = atacante.disparar();
           else if (atacante.clase === "Pícaro") accion = atacante.atacar_con_daga();
+          else if (atacante.clase === "Arquero") {
+            // Verifica si le quedan flechas antes de disparar
+            if (atacante.flechas > 0) {
+              accion = atacante.disparar();
+            } else {
+              console.log(`⚠️ ${atacante.nombre} se quedó sin flechas y ataca con los puños.`);
+              accion = atacante.atacar();
+            }
+          }
           else if (atacante.clase === "Clérigo") {
             // Inteligencia artificial simple: si está herido, 50% de curarse en vez de atacar
             if (Math.random() > 0.5 && atacante.vida < atacante.vidaMaxima) {
@@ -190,7 +204,7 @@ while (jugadores.length > 1) {
           // Comprobar si el objetivo ha muerto
           if (objetivo.vida <= 0) {
             objetivo.vida = 0;
-            console.log(`☠️ ¡MUERTE! ${objetivo.nombre} ha caído en combate y no podrá atacar más.`);
+            console.log(`☠️ ¡MUERTE! ${objetivo.nombre} ha caído en combate.`);
           }
         }
       }
