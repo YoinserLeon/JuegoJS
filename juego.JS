@@ -1,3 +1,4 @@
+JavaScript
 // ==========================================================
 // PROYECTO: CLASH OF LEGENDS
 // ALUMNO: Yoinser León
@@ -7,11 +8,10 @@
 // 1. CLASE BASE: PERSONAJE
 // ---------------------------------------------------------
 class Personaje {
-  constructor(nombre, vida, danio, defensa, velocidad, clase, fraseSaludo, fraseVictoria) {
+  constructor(nombre, vida, defensa, velocidad, clase, fraseSaludo, fraseVictoria) {
     this.nombre = nombre;
     this.vida = vida;
-    this.vidaMaxima = vida; // Para el límite de curación del Clérigo
-    this.danio = danio; // Este será el daño EXCLUSIVO de las habilidades
+    this.vidaMaxima = vida; 
     this.defensa = defensa;
     this.velocidad = velocidad;
     this.clase = clase;
@@ -29,53 +29,73 @@ class Personaje {
   }
 }
 
-// ---------------------------------------------------------
+// ----------------------------------------------------------
 // 2. CLASES HIJAS (Guerrero, Mago, Arquero, Clérigo, Pícaro)
-// ---------------------------------------------------------
+// ----------------------------------------------------------
 class Guerrero extends Personaje {
-  constructor(nombre, vida, danio, defensa, velocidad, fraseSaludo, fraseVictoria) {
-    super(nombre, vida, danio, defensa, velocidad, "Guerrero", fraseSaludo, fraseVictoria);
-    this.array_de_armas = ["Espada Pesada", "Hacha de Batalla", "Mazo de Guerra"];
+  constructor(nombre, vida, defensa, velocidad, fraseSaludo, fraseVictoria) {
+    super(nombre, vida, defensa, velocidad, "Guerrero", fraseSaludo, fraseVictoria);
+    // Cada arma tiene su propio daño
+    this.array_de_armas = [
+      { nombre: "Espada Pesada", danio: 25 },
+      { nombre: "Hacha de Batalla", danio: 30 },
+      { nombre: "Mazo de Guerra", danio: 28 }
+    ];
   }
   atacar_con_arma() {
     let arma = this.array_de_armas[Math.floor(Math.random() * this.array_de_armas.length)];
-    return { tipo: "arma", nombreArma: arma, danio: this.danio, critico: false };
+    return { tipo: "arma", nombreArma: arma.nombre, danio: arma.danio, critico: false };
   }
 }
 
 class Mago extends Personaje {
-  constructor(nombre, vida, danio, defensa, velocidad, fraseSaludo, fraseVictoria) {
-    super(nombre, vida, danio, defensa, velocidad, "Mago", fraseSaludo, fraseVictoria);
-    this.array_de_hechizos = ["Bola de Fuego", "Rayo de Escarcha", "Tormenta Eléctrica"];
+  constructor(nombre, vida, defensa, velocidad, fraseSaludo, fraseVictoria) {
+    super(nombre, vida, defensa, velocidad, "Mago", fraseSaludo, fraseVictoria);
+    // Cada hechizo tiene su propio daño
+    this.array_de_hechizos = [
+      { nombre: "Bola de Fuego", danio: 35 },
+      { nombre: "Rayo de Escarcha", danio: 22 },
+      { nombre: "Tormenta Eléctrica", danio: 40 }
+    ];
   }
   atacar_con_hechizo() {
     let hechizo = this.array_de_hechizos[Math.floor(Math.random() * this.array_de_hechizos.length)];
-    return { tipo: "hechizo", nombreArma: hechizo, danio: this.danio, critico: false };
+    return { tipo: "hechizo", nombreArma: hechizo.nombre, danio: hechizo.danio, critico: false };
   }
 }
 
 class Arquero extends Personaje {
-  constructor(nombre, vida, danio, defensa, velocidad, fraseSaludo, fraseVictoria) {
-    super(nombre, vida, danio, defensa, velocidad, "Arquero", fraseSaludo, fraseVictoria);
-    this.array_de_flechas = ["Flecha Perforante", "Flecha de Fuego", "Flecha Envenenada"];
+  constructor(nombre, vida, defensa, velocidad, fraseSaludo, fraseVictoria) {
+    super(nombre, vida, defensa, velocidad, "Arquero", fraseSaludo, fraseVictoria);
+    // Cada flecha tiene su propio daño
+    this.array_de_flechas = [
+      { nombre: "Flecha Perforante", danio: 26 },
+      { nombre: "Flecha de Fuego", danio: 22 },
+      { nombre: "Flecha Envenenada", danio: 18 }
+    ];
     this.flechas = 7; // Cantidad inicial de munición
   }
   disparar() {
     this.flechas--; // Resta una flecha
     let flecha = this.array_de_flechas[Math.floor(Math.random() * this.array_de_flechas.length)];
     console.log(`🏹 [MUNICIÓN] A ${this.nombre} le quedan ${this.flechas} flechas.`);
-    return { tipo: "flecha", nombreArma: flecha, danio: this.danio, critico: false };
+    return { tipo: "flecha", nombreArma: flecha.nombre, danio: flecha.danio, critico: false };
   }
 }
 
 class Clerigo extends Personaje {
-  constructor(nombre, vida, danio, defensa, velocidad, fraseSaludo, fraseVictoria) {
-    super(nombre, vida, danio, defensa, velocidad, "Clérigo", fraseSaludo, fraseVictoria);
-    this.array_de_plegarias = ["Castigo Divino", "Luz Cegadora", "Fuego Sagrado"];
+  constructor(nombre, vida, defensa, velocidad, fraseSaludo, fraseVictoria) {
+    super(nombre, vida, defensa, velocidad, "Clérigo", fraseSaludo, fraseVictoria);
+    // Cada plegaria tiene su propio daño
+    this.array_de_plegarias = [
+      { nombre: "Castigo Divino", danio: 20 },
+      { nombre: "Luz Cegadora", danio: 15 },
+      { nombre: "Fuego Sagrado", danio: 24 }
+    ];
   }
   atacar_con_plegaria() {
     let plegaria = this.array_de_plegarias[Math.floor(Math.random() * this.array_de_plegarias.length)];
-    return { tipo: "plegaria", nombreArma: plegaria, danio: this.danio, critico: false };
+    return { tipo: "plegaria", nombreArma: plegaria.nombre, danio: plegaria.danio, critico: false };
   }
   curar() {
     let curacionMaxima = this.vidaMaxima * 0.25;
@@ -87,33 +107,39 @@ class Clerigo extends Personaje {
 }
 
 class Picaro extends Personaje {
-  constructor(nombre, vida, danio, defensa, velocidad, fraseSaludo, fraseVictoria) {
-    super(nombre, vida, danio, defensa, velocidad, "Pícaro", fraseSaludo, fraseVictoria);
-    this.array_de_dagas = ["Daga Sombría", "Cuchillo Arrojadizo", "Hoja Oculta"];
+  constructor(nombre, vida, defensa, velocidad, fraseSaludo, fraseVictoria) {
+    super(nombre, vida, defensa, velocidad, "Pícaro", fraseSaludo, fraseVictoria);
+    // Cada daga tiene su propio daño
+    this.array_de_dagas = [
+      { nombre: "Daga Sombría", danio: 22 },
+      { nombre: "Cuchillo Arrojadizo", danio: 18 },
+      { nombre: "Hoja Oculta", danio: 28 }
+    ];
   }
   atacar_con_daga() {
     let daga = this.array_de_dagas[Math.floor(Math.random() * this.array_de_dagas.length)];
     let esCritico = (Math.floor(Math.random() * 100) + 1) <= 5; // 5% de probabilidad
-    return { tipo: "daga", nombreArma: daga, danio: this.danio, critico: esCritico };
+    return { tipo: "daga", nombreArma: daga.nombre, danio: daga.danio, critico: esCritico };
   }
 }
 
-// ---------------------------------------------------------
-// 3. CREACIÓN DE LOS 7 PERSONAJES OBLIGATORIOS (Con frases)
-// ---------------------------------------------------------
-let g1 = new Guerrero("Balthazar \"Puño de Hierro\"", 150, 20, 15, 8, "El destino nos ha reunido en el lodo y la sangre. Demuéstrame si tu nombre merece ser recordado.", "El polvo y el acero hablan por sí solos. Limpia mi espada, esto ha terminado.");
-let g2 = new Guerrero("Thalia \"Corazón de León\"", 140, 22, 18, 6, "No temo a la muerte ni a tu espada. ¡Veamos de qué estás hecho en este instante!", "El campo de batalla ha hablado. Mi espada sigue intacta; tu destino, no.");
-let m1 = new Mago("Ignis \"El Tejehechizos\"", 90, 25, 8, 14, "El conocimiento es el arma más peligrosa... y yo domino la tormenta y el fuego.", "La magia siempre prevalece sobre la fuerza bruta. Un resultado predecible.");
-let m2 = new Mago("Morgana \"La Atrapa Almas\"", 85, 28, 8, 12, "Tu mente es un libro abierto... y estoy a punto de arrancar la última página.", "Las estrellas han dictado su sentencia. Su fuego se ha apagado.");
-let c1 = new Clerigo("Cassian \"El Custodio del Alba\"", 110, 15, 12, 18, "Incluso en la oscuridad más profunda, la luz sagrada busca a los infieles. Arrodíllate.", "La penitencia ha sido pagada. Que el descanso eterno sea clemente con ellos.");
-let a1 = new Arquero("Thorne Ojo de Halcón", 100, 22, 12, 15, "Una sola flecha, un solo latido. No te preocupes, ni siquiera sentirás el impacto.", "La distancia nunca fue un problema. Cada flecha encuentra siempre su destino.");
-let p1 = new Picaro("Nyx \"La Daga Invisible\"", 95, 24, 10, 20, "Dicen que la muerte llega sin avisar... hoy me he tomado la libertad de adelantarme.", "El oro es efímero, pero la sombra que dejo tras de mí es eterna. Adiós.");
+// -----------------------------------------------------------------------------------------------------
+// 3. CREACIÓN DE LOS 7 PERSONAJES OBLIGATORIOS (Modificacion de nombres y frases para mayor inmersión)
+// -----------------------------------------------------------------------------------------------------
+// Nota: Se eliminó el parámetro "daño base" porque ahora el daño depende 100% del arma usada o los puños.
+let g1 = new Guerrero("Balthazar \"Puño de Hierro\"", 150, 15, 8, "El destino nos ha reunido en el lodo y la sangre. Demuéstrame si tu nombre merece ser recordado.", "El polvo y el acero hablan por sí solos. Limpia mi espada, esto ha terminado.");
+let g2 = new Guerrero("Thalia \"Corazón de León\"", 140, 18, 6, "No temo a la muerte ni a tu espada. ¡Veamos de qué estás hecho en este instante!", "El campo de batalla ha hablado. Mi espada sigue intacta; tu destino, no.");
+let m1 = new Mago("Ignis \"El Tejehechizos\"", 90, 8, 14, "El conocimiento es el arma más peligrosa... y yo domino la tormenta y el fuego.", "La magia siempre prevalece sobre la fuerza bruta. Un resultado predecible.");
+let m2 = new Mago("Morgana \"La Atrapa Almas\"", 85, 8, 12, "Tu mente es un libro abierto... y estoy a punto de arrancar la última página.", "Las estrellas han dictado su sentencia. Su fuego se ha apagado.");
+let c1 = new Clerigo("Cassian \"El Custodio del Alba\"", 110, 12, 18, "Incluso en la oscuridad más profunda, la luz sagrada busca a los infieles. Arrodíllate.", "La penitencia ha sido pagada. Que el descanso eterno sea clemente con ellos.");
+let a1 = new Arquero("Thorne Ojo de Halcón", 100, 12, 15, "Una sola flecha, un solo latido. No te preocupes, ni siquiera sentirás el impacto.", "La distancia nunca fue un problema. Cada flecha encuentra siempre su destino.");
+let p1 = new Picaro("Nyx \"La Daga Invisible\"", 95, 10, 20, "Dicen que la muerte llega sin avisar... hoy me he tomado la libertad de adelantarme.", "El oro es efímero, pero la sombra que dejo tras de mí es eterna. Adiós.");
 
 let jugadores = [g1, g2, m1, m2, c1, a1, p1];
 
-// ---------------------------------------------------------
+// -----------------------------
 // 4. MOTOR DEL JUEGO (BATALLA)
-// ---------------------------------------------------------
+// -----------------------------
 console.log("==================================================");
 console.log("                CLASH OF LEGENDS                  ");
 console.log("==================================================");
@@ -216,9 +242,9 @@ while (jugadores.length > 1) {
   ronda++; 
 }
 
-// ---------------------------------------------------------
+// -------------------
 // 5. FIN DEL JUEGO
-// ---------------------------------------------------------
+// -------------------
 if (jugadores.length === 1) {
     let ganador = jugadores[0];
     console.log("\n==================================================");
