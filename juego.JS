@@ -1,4 +1,3 @@
-JavaScript
 // ==========================================================
 // PROYECTO: CLASH OF LEGENDS
 // ALUMNO: Yoinser León
